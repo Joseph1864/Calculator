@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,14 +27,17 @@ fun MainScreen(
     viewModel: MainScreenViewModel
 ) {
 
+    val uiState :MainScreenViewState by viewModel.uiState.collectAsState()
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                text = "ABC",
+                text = uiState.calculationInput,
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -41,7 +45,7 @@ fun MainScreen(
                     .horizontalScroll(rememberScrollState()),
                 fontSize = 36.sp,
                 color = MaterialTheme.colorScheme.onPrimary,
-                maxLines = 2
+                maxLines = 1
             )
             Text(
                 text = "ABC",
@@ -52,7 +56,7 @@ fun MainScreen(
                     .horizontalScroll(rememberScrollState()),
                 fontSize = 72.sp,
                 color = MaterialTheme.colorScheme.onPrimary,
-                maxLines = 2
+                maxLines = 1
             )
             Row() {
                 CalculatorButton(
@@ -61,7 +65,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.clearInput()
                     }
                 )
                 CalculatorButton(
@@ -70,7 +74,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.deleteInput()
                     }
                 )
                 Spacer(
@@ -85,7 +89,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("/")
                     }
                 )
             }
@@ -96,7 +100,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("7")
                     }
                 )
                 CalculatorButton(
@@ -105,16 +109,16 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("8")
                     }
                 )
                 CalculatorButton(
-                        text = "9",
-                modifier = Modifier
-                    .weight(1f)
-                    .aspectRatio(1f),
-                onClick = {
-
+                    text = "9",
+                    modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(1f),
+                    onClick = {
+                        viewModel.buttonPressed("9")
                     }
                 )
                 CalculatorButton(
@@ -123,7 +127,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("x")
                     }
                 )
             }
@@ -134,7 +138,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("4")
                     }
                 )
                 CalculatorButton(
@@ -143,7 +147,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("5")
                     }
                 )
                 CalculatorButton(
@@ -152,7 +156,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("6")
                     }
                 )
                 CalculatorButton(
@@ -161,7 +165,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("-")
                     }
                 )
             }
@@ -172,7 +176,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("1")
                     }
                 )
                 CalculatorButton(
@@ -181,7 +185,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("2")
                     }
                 )
                 CalculatorButton(
@@ -190,7 +194,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("3")
                     }
                 )
                 CalculatorButton(
@@ -199,7 +203,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("+")
                     }
                 )
             }
@@ -210,7 +214,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed("0")
                     }
                 )
                 CalculatorButton(
@@ -219,7 +223,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.buttonPressed(".")
                     }
                 )
                 Spacer(
