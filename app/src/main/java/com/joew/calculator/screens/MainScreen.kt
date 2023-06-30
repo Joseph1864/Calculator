@@ -37,7 +37,7 @@ fun MainScreen(
                 .background(MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                text = uiState.calculationInput,
+                text = uiState.totalExpression,
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -48,17 +48,17 @@ fun MainScreen(
                 maxLines = 1
             )
             Text(
-                text = "ABC",
+                text = uiState.result,
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 32.dp)
+                    .padding(vertical = 24.dp)
                     .horizontalScroll(rememberScrollState()),
-                fontSize = 72.sp,
+                fontSize = 90.sp,
                 color = MaterialTheme.colorScheme.onPrimary,
                 maxLines = 1
             )
-            Row() {
+            Row {
                 CalculatorButton(
                     text = "AC",
                     modifier = Modifier
@@ -89,11 +89,11 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-                        viewModel.buttonPressed("/")
+                        viewModel.divisionPressed("/")
                     }
                 )
             }
-            Row() {
+            Row {
                 CalculatorButton(
                     text = "7",
                     modifier = Modifier
@@ -127,11 +127,11 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-                        viewModel.buttonPressed("x")
+                        viewModel.multiplicationPressed("x")
                     }
                 )
             }
-            Row() {
+            Row {
                 CalculatorButton(
                     text = "4",
                     modifier = Modifier
@@ -165,11 +165,11 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-                        viewModel.buttonPressed("-")
+                        viewModel.subtractionPressed("-")
                     }
                 )
             }
-            Row() {
+            Row {
                 CalculatorButton(
                     text = "1",
                     modifier = Modifier
@@ -203,11 +203,11 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-                        viewModel.buttonPressed("+")
+                        viewModel.additionPressed("+")
                     }
                 )
             }
-            Row() {
+            Row {
                 CalculatorButton(
                     text = "0",
                     modifier = Modifier
@@ -238,7 +238,7 @@ fun MainScreen(
                         .weight(1f)
                         .aspectRatio(1f),
                     onClick = {
-
+                        viewModel.equalsPressed()
                     }
                 )
             }
