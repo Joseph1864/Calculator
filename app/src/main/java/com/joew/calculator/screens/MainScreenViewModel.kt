@@ -3,6 +3,7 @@ package com.joew.calculator.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.joew.calculator.Calculator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,16 +15,10 @@ class MainScreenViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow(MainScreenViewState())
     val uiState: StateFlow<MainScreenViewState> = _uiState.asStateFlow()
+    val calculator = Calculator()
 
-    private var operation: Int = 0
-    private var operand1: String = ""
-    private var operand2: String = ""
-    fun buttonPressed(input: String) {
-        if (operation == 0) {
-            operand1 += input
-        } else {
-            operand2 += input
-        }
+    fun buttonPressed(input: Char) {
+
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -33,63 +28,13 @@ class MainScreenViewModel: ViewModel() {
         }
     }
 
-    fun additionPressed(input: String) {
-        operation = 1
-        viewModelScope.launch {
-            _uiState.update{
-                it.copy(
-                    totalExpression = it.totalExpression + input
-                )
-            }
-        }
-    }
-    fun subtractionPressed(input: String) {
-        operation = 2
-        viewModelScope.launch {
-            _uiState.update{
-                it.copy(
-                    totalExpression = it.totalExpression + input
-                )
-            }
-        }
-    }
-    fun multiplicationPressed(input: String) {
-        operation = 3
-        viewModelScope.launch {
-            _uiState.update{
-                it.copy(
-                    totalExpression = it.totalExpression + input
-                )
-            }
-        }
-    }
-    fun divisionPressed(input: String) {
-        operation = 4
-        viewModelScope.launch {
-            _uiState.update{
-                it.copy(
-                    totalExpression = it.totalExpression + input
-                )
-            }
-        }
-    }
     fun equalsPressed() {
-        val operand1Double = operand1.toDouble()
-        val operand2Double = operand2.toDouble()
-
-        var result: Double = 0.0
         val decimalFormat = DecimalFormat("#.###")
 
-        when (operation) {
-            1 -> result = operand1Double + operand2Double
-            2 -> result = operand1Double - operand2Double
-            3 -> result = operand1Double * operand2Double
-            4 -> result = operand1Double / operand2Double
-        }
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    result = decimalFormat.format(result).toString()
+                    result = decimalFormat.format(calculator.evaluateExpression(_uiState.value.totalExpression)).toString()
                 )
             }
         }
@@ -104,10 +49,6 @@ class MainScreenViewModel: ViewModel() {
     }
 
     fun clearInput() {
-        operation = 0
-        operand1 = ""
-        operand2 = ""
-
         viewModelScope.launch {
             _uiState.update{
                 it.copy(
@@ -119,6 +60,6 @@ class MainScreenViewModel: ViewModel() {
 }
 
 data class MainScreenViewState(
-    val totalExpression: String = "",
+    var totalExpression: String = "",
     val result: String = ""
 )
