@@ -66,4 +66,7 @@ dependencies {
 
     //Viewmodel
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    //JUnit
+    testImplementation('junit:junit:4.13')
 }

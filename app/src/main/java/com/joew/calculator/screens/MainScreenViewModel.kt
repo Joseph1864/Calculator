@@ -36,10 +36,14 @@ class MainScreenViewModel: ViewModel() {
         }
     }
 
-    fun updateView()  {
-        DecimalFormat("#.#####").format(calculator.evaluateExpression(_uiState.value.totalExpression))
+    private fun updateView()  {
+        _uiState.update {
+            it.copy(
+                result = DecimalFormat("#.#####").format(calculator.evaluateExpression(_uiState.value.totalExpression))
+            )
+        }
     }
-    fun undefinedInput() {
+    private fun undefinedInput() {
         _uiState.update {
             it.copy(
                 result = "Undefined"
