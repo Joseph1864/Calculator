@@ -2,7 +2,7 @@ package com.joew.calculator
 
 import org.junit.Assert.*
 import org.junit.Test
-import java.lang.Error
+import java.lang.NumberFormatException
 import java.math.BigDecimal
 
 class CalculatorTest {
@@ -16,8 +16,19 @@ class CalculatorTest {
         assertEquals(BigDecimal("10"), calculator.evaluateExpression("10"))
     }
 
+    @Test
+    fun testEvaluateExpressionComplexOperations() {
+        assertEquals(BigDecimal("11111111110"), calculator.evaluateExpression("10+100+1000+10000+100000+1000000+10000000+100000000+1000000000+10000000000"))
+        assertEquals(BigDecimal("-98980.0"), calculator.evaluateExpression("840+26080/800X4300-240000"))
+    }
+
     @Test(expected = ArithmeticException::class)
     fun testEvaluateExpressionDivideBy0() {
         calculator.evaluateExpression("10/0")
+    }
+
+    @Test(expected = NumberFormatException::class)
+    fun testEvaluateExpressionDecimalError() {
+        calculator.evaluateExpression("13.0.0")
     }
 }

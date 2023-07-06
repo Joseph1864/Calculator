@@ -5,7 +5,7 @@ import java.math.MathContext
 
 class Calculator {
 
-    private val mathContext = MathContext(10)
+    private val mathContext = MathContext(20)
 
     fun evaluateExpression(expression: String) : BigDecimal  = when {
         expression.contains('+') -> with(expression) {

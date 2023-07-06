@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.lang.ArithmeticException
+import java.lang.NumberFormatException
 import java.text.DecimalFormat
 
 class MainScreenViewModel: ViewModel() {
@@ -19,20 +20,51 @@ class MainScreenViewModel: ViewModel() {
     val calculator = Calculator()
 
     fun buttonPressed(input: Char) {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    totalExpression = it.totalExpression + input
-                )
+        when {
+            (_uiState.value.result == "Undefined") ->
+            {
+                clearInput()
+                _uiState.update {
+                    it.copy(
+                        totalExpression = it.totalExpression + input
+                    )
+                }
             }
+            (_uiState.value.result == "") ->
+                _uiState.update {
+                    it.copy(
+                        totalExpression = it.totalExpression + input
+                    )
+                }
+            (_uiState.value.result != "") ->
+                if (input == '+' || input == '-' || input == 'X' || input == '/') {
+                    _uiState.update {
+                        it.copy(
+                            totalExpression = it.result + input
+                        )
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            totalExpression = input.toString()
+                        )
+                    }
+                }
+        }
+        _uiState.update {
+            it.copy(
+                result = ""
+            )
         }
     }
 
     fun equalsPressed() {
         try {
             updateView()
-        } catch(e: ArithmeticException) {
-            undefinedInput()
+        } catch(e: Exception) {
+            if (e is ArithmeticException || e is NumberFormatException) {
+                undefinedInput()
+            }
         }
     }
 
@@ -60,12 +92,10 @@ class MainScreenViewModel: ViewModel() {
     }
 
     fun clearInput() {
-        viewModelScope.launch {
-            _uiState.update{
-                it.copy(
-                    totalExpression = "", result = ""
-                )
-            }
+        _uiState.update{
+            it.copy(
+                totalExpression = "", result = ""
+            )
         }
     }
 }
