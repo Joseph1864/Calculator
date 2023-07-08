@@ -20,8 +20,8 @@ class MainScreenViewModel: ViewModel() {
     val calculator = Calculator()
 
     fun buttonPressed(input: Char) {
-        when {
-            (_uiState.value.result == "Undefined") ->
+        when (_uiState.value.result) {
+            "Undefined" ->
             {
                 clearInput()
                 _uiState.update {
@@ -30,13 +30,13 @@ class MainScreenViewModel: ViewModel() {
                     )
                 }
             }
-            (_uiState.value.result == "") ->
+            "" ->
                 _uiState.update {
                     it.copy(
                         totalExpression = it.totalExpression + input
                     )
                 }
-            (_uiState.value.result != "") ->
+            else ->
                 if (input == '+' || input == '-' || input == 'X' || input == '/') {
                     _uiState.update {
                         it.copy(

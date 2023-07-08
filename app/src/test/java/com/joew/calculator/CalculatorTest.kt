@@ -20,6 +20,8 @@ class CalculatorTest {
     fun testEvaluateExpressionComplexOperations() {
         assertEquals(BigDecimal("11111111110"), calculator.evaluateExpression("10+100+1000+10000+100000+1000000+10000000+100000000+1000000000+10000000000"))
         assertEquals(BigDecimal("-98980.0"), calculator.evaluateExpression("840+26080/800X4300-240000"))
+        assertEquals(BigDecimal("10"), calculator.evaluateExpression("4--6"))
+        assertEquals(BigDecimal("-30"), calculator.evaluateExpression("5X-6"))
     }
 
     @Test(expected = ArithmeticException::class)
