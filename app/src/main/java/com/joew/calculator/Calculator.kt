@@ -2,8 +2,9 @@ package com.joew.calculator
 
 import java.math.BigDecimal
 import java.math.MathContext
+import javax.inject.Inject
 
-class Calculator {
+class Calculator @Inject constructor() {
 
     private val mathContext = MathContext(20)
 

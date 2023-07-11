@@ -1,5 +1,6 @@
 package com.joew.calculator.di
 
+import com.joew.calculator.Calculator
 import com.joew.calculator.screens.MainScreenViewModel
 import dagger.Module
 import dagger.Provides
@@ -14,6 +15,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMainScreenViewModel(): MainScreenViewModel {
-        return MainScreenViewModel()
+        return MainScreenViewModel(
+            calculator = Calculator()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCalculator(): Calculator {
+        return Calculator()
     }
 }

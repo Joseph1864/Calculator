@@ -16,11 +16,12 @@ import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
-class MainScreenViewModel @Inject constructor() : ViewModel() {
+class MainScreenViewModel @Inject constructor(
+    calculator: Calculator
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainScreenViewState())
     val uiState: StateFlow<MainScreenViewState> = _uiState.asStateFlow()
-    val calculator = Calculator()
 
     fun buttonPressed(input: Char) {
         when (_uiState.value.result) {
