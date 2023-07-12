@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    calculator: Calculator
+    var calculator: Calculator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainScreenViewState())
