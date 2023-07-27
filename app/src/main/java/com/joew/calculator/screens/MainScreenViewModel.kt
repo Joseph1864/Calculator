@@ -2,14 +2,12 @@ package com.joew.calculator.screens
 
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.joew.calculator.Calculator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.lang.ArithmeticException
 import java.lang.NumberFormatException
 import java.text.DecimalFormat
@@ -17,94 +15,84 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    var calculator: Calculator
+    private val calculator: Calculator
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MainScreenViewState())
-    val uiState: StateFlow<MainScreenViewState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<ViewState>(ViewState.Content())
+    val uiState: StateFlow<ViewState> = _uiState.asStateFlow()
 
     fun buttonPressed(input: Char) {
-        when (_uiState.value.result) {
-            "Undefined" ->
-            {
-                clearInput()
-                _uiState.update {
-                    it.copy(
-                        totalExpression = it.totalExpression + input
-                    )
+        when(val currentUiState = uiState.value) {
+            is ViewState.Undefined -> ViewState.Content(
+                totalExpression = input.toString()
+            )
+            is ViewState.Content -> {
+                when {
+                    currentUiState.result.isBlank() -> blankResult(input = input, state = currentUiState)
+                    "+-/X".contains(input) -> operationInput(input = input, state = currentUiState)
+                    else -> blankResult(input = input, state = currentUiState)
                 }
             }
-            "" ->
-                _uiState.update {
-                    it.copy(
-                        totalExpression = it.totalExpression + input
-                    )
-                }
-            else ->
-                if (input == '+' || input == '-' || input == 'X' || input == '/') {
-                    _uiState.update {
-                        it.copy(
-                            totalExpression = it.result + input
-                        )
-                    }
-                } else {
-                    _uiState.update {
-                        it.copy(
-                            totalExpression = input.toString()
-                        )
-                    }
-                }
-        }
-        _uiState.update {
-            it.copy(
-                result = ""
-            )
         }
     }
 
     fun equalsPressed() {
         try {
             updateView()
-        } catch(e: Exception) {
-            if (e is ArithmeticException || e is NumberFormatException) {
-                undefinedInput()
-            }
+        } catch (e: ArithmeticException) {
+            undefinedInput()
+        } catch (e: NumberFormatException) {
+            undefinedInput()
         }
     }
 
-    private fun updateView()  {
-        _uiState.update {
-            it.copy(
-                result = DecimalFormat("#.#####").format(calculator.evaluateExpression(_uiState.value.totalExpression))
-            )
-        }
-    }
-    private fun undefinedInput() {
-        _uiState.update {
-            it.copy(
-                result = "Undefined"
+    private fun updateView() = _uiState.update {
+        when (it) {
+            is ViewState.Undefined -> it
+            is ViewState.Content -> it.copy(
+                result = DecimalFormat("#.#####").format(calculator.evaluateExpression(it.totalExpression))
             )
         }
     }
 
-    fun deleteInput() = viewModelScope.launch {
-        _uiState.update {
-            it.copy(
-                totalExpression = it.totalExpression.dropLast(1)
+    private fun blankResult(input: Char, state: ViewState.Content) = _uiState.update {
+        state.copy(
+            totalExpression = state.totalExpression + input
+        )
+    }
+
+    private fun operationInput(input:Char, state: ViewState.Content) = _uiState.update{
+        state.copy(
+            totalExpression = state.result + input,
+            result = ""
+        )
+    }
+
+    fun deleteInput() = _uiState.update {
+        when (it) {
+            is ViewState.Undefined -> ViewState.Content()
+            is ViewState.Content -> it.copy(
+                totalExpression = it.totalExpression.dropLast(1),
             )
         }
     }
 
-    fun clearInput() {
-        _uiState.update{
-            it.copy(
-                totalExpression = "", result = ""
-            )
-        }
+    fun clearInput() = _uiState.update {
+        ViewState.Content(
+            totalExpression = "",
+            result = ""
+        )
     }
+
+    private fun undefinedInput() = _uiState.update { ViewState.Undefined }
 }
 
-data class MainScreenViewState(
-    val totalExpression: String = "",
-    val result: String = ""
-)
+sealed class ViewState {
+
+    data class Content(
+        val totalExpression: String = "",
+        val result: String = ""
+    ) : ViewState()
+
+    object Undefined : ViewState()
+}

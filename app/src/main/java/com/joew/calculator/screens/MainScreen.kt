@@ -27,7 +27,7 @@ fun MainScreen(
     viewModel: MainScreenViewModel
 ) {
 
-    val uiState :MainScreenViewState by viewModel.uiState.collectAsState()
+    val uiState :ViewState by viewModel.uiState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -41,28 +41,44 @@ fun MainScreen(
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
         ) {
-            Text(
-                text = uiState.totalExpression,
-                textAlign = TextAlign.End,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 32.dp)
-                    .horizontalScroll(rememberScrollState()),
-                fontSize = 36.sp,
-                color = MaterialTheme.colorScheme.onPrimary,
-                maxLines = 1
-            )
-            Text(
-                text = uiState.result,
-                textAlign = TextAlign.End,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp)
-                    .horizontalScroll(rememberScrollState()),
-                fontSize = 90.sp,
-                color = MaterialTheme.colorScheme.onPrimary,
-                maxLines = 1
-            )
+            when(val currentUiState = uiState) {
+                is ViewState.Content -> {
+                    Text(
+                        text = currentUiState.totalExpression,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp)
+                            .horizontalScroll(rememberScrollState()),
+                        fontSize = 36.sp,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        maxLines = 1
+                    )
+                    Text(
+                        text = currentUiState.result,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 24.dp)
+                            .horizontalScroll(rememberScrollState()),
+                        fontSize = 90.sp,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        maxLines = 1
+                    )
+                }
+                is ViewState.Undefined -> {
+                    Text(
+                        text = "Undefined",
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp),
+                        fontSize = 60.sp,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
+            }
+
             Row {
                 CalculatorButton(
                     text = "AC",
