@@ -14,10 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import com.joew.calculator.R
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,7 +51,6 @@ fun MainScreen(
                         textAlign = TextAlign.End,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 32.dp)
                             .horizontalScroll(rememberScrollState()),
                         fontSize = 36.sp,
                         color = MaterialTheme.colorScheme.onPrimary,
@@ -58,8 +60,8 @@ fun MainScreen(
                         text = currentUiState.result,
                         textAlign = TextAlign.End,
                         modifier = Modifier
+                            .padding(top = 48.dp)
                             .fillMaxWidth()
-                            .padding(vertical = 24.dp)
                             .horizontalScroll(rememberScrollState()),
                         fontSize = 90.sp,
                         color = MaterialTheme.colorScheme.onPrimary,
@@ -68,7 +70,7 @@ fun MainScreen(
                 }
                 is ViewState.Undefined -> {
                     Text(
-                        text = "Undefined",
+                        text = stringResource(id = R.string.result_undefined),
                         textAlign = TextAlign.End,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -81,7 +83,7 @@ fun MainScreen(
 
             Row {
                 CalculatorButton(
-                    text = "AC",
+                    text = stringResource(id = R.string.button_ac),
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f),
@@ -90,7 +92,7 @@ fun MainScreen(
                     }
                 )
                 CalculatorButton(
-                    text = "DEL",
+                    text = stringResource(id = R.string.button_delete),
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f),
